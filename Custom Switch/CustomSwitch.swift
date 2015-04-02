@@ -15,7 +15,6 @@ class CustomSwitch: UIView {
     var onButton: UIButton!
     var offButton: UIButton!
     var buttonWindow: UIView!
-    var centerCircle: UIView!
     
     var onLabelActive: UILabel!
     var onLabelInactive: UILabel!
@@ -95,20 +94,16 @@ class CustomSwitch: UIView {
         offLabelInactive.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
         offButton.addSubview(offLabelInactive)
      
-        
-        centerCircle = UIView()
-        centerCircle.frame = CGRectMake((self.bounds.size.width / 2) - 12.0, (self.bounds.size.height / 2) - 12.0, 24.0, 24.0)
-        centerCircle.backgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1)
-        centerCircle.layer.cornerRadius = 12.0
-        self.addSubview(centerCircle)
-        
         centerCircleLabel = UILabel()
-        centerCircleLabel.frame = CGRectMake(0.0, 0.0, 24.0, 24.0)
+        centerCircleLabel.frame = CGRectMake((self.bounds.size.width / 2) - 12.0, (self.bounds.size.height / 2) - 12.0, 24.0, 24.0)
         centerCircleLabel.text = "or"
         centerCircleLabel.textAlignment = NSTextAlignment.Center
         centerCircleLabel.textColor = UIColor(red:0.49, green:0.49, blue:0.49, alpha:1)
         centerCircleLabel.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
-        centerCircle.addSubview(centerCircleLabel)
+        centerCircleLabel.backgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1)
+        centerCircleLabel.layer.cornerRadius = 12.0
+        centerCircleLabel.clipsToBounds = true
+        self.addSubview(centerCircleLabel)
         
         isOff = false
         
