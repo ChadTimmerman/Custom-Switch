@@ -22,6 +22,8 @@ class CustomSwitch: UIView {
     var offLabelActive: UILabel!
     var offLabelInactive: UILabel!
     var centerCircleLabel: UILabel!
+    
+    var isOff: Bool!
 
     override func drawRect(rect: CGRect) {
         
@@ -45,14 +47,14 @@ class CustomSwitch: UIView {
         onButton.frame = CGRectMake(0.0, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
         onButton.backgroundColor = UIColor.clearColor()
         onButton.enabled = false
-        onButton.addTarget(self, action: "switchOn", forControlEvents: UIControlEvents.TouchUpInside)
+        onButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(onButton)
         
         offButton = UIButton()
         offButton.frame = CGRectMake(self.bounds.size.width / 2, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
         offButton.backgroundColor = UIColor.clearColor()
         offButton.enabled = true
-        offButton.addTarget(self, action: "switchOff", forControlEvents: UIControlEvents.TouchUpInside)
+        offButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(offButton)
 
         // Setup the Labels
@@ -108,68 +110,38 @@ class CustomSwitch: UIView {
         centerCircleLabel.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
         centerCircle.addSubview(centerCircleLabel)
         
+        isOff = false
+        
     }
     
-
-    func switchOn() {
+    func toggleSwitch(sender: UIButton) {
+        onOrOff(!isOff)
+    }
+    
+    func onOrOff(on : Bool){
+        
+        if(on == isOff){
+            return
+        }
+        isOff = on
         
         UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
             
             UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 14.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
                 
-                self.buttonWindow.frame.origin.x -= self.frame.size.width / 2
-
-            }, completion: nil)
-            
-
-            self.onLabelActive.alpha = 1.0
-            self.onLabelInactive.alpha = 0.0
-            self.offLabelActive.alpha = 0.0
-            self.offLabelInactive.alpha = 1.0
-            
-            self.onButton.enabled = false
-            self.offButton.enabled = true
-            
-        }, completion: nil)
-        
-    }
-    
-    func switchOff() {
-        
-        UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-            
-            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 14.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-                
-                self.buttonWindow.frame.origin.x += self.frame.size.width / 2
+                self.buttonWindow.frame.origin.x += self.frame.size.width / 2 * (on ? 1 : -1)
                 
                 }, completion: nil)
             
-            self.onLabelActive.alpha = 0.0
-            self.onLabelInactive.alpha = 1.0
-            self.offLabelActive.alpha = 1.0
-            self.offLabelInactive.alpha = 0.0
+            self.onLabelActive.alpha = 1.0 + (on ? -1 : 1)
+            self.onLabelInactive.alpha = 0.0 + (on ? 1 : -1)
+            self.offLabelActive.alpha = 0.0 + (on ? 1 : -1)
+            self.offLabelInactive.alpha = 1.0 + (on ? -1 : 1)
             
-            self.onButton.enabled = true
-            self.offButton.enabled = false
+            self.onButton.enabled = !self.onButton.enabled
+            self.offButton.enabled = !self.offButton.enabled
             
             }, completion: nil)
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    }  
 }
