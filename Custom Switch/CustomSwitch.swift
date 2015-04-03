@@ -15,16 +15,18 @@ class CustomSwitch: UIView {
     var onButton: UIButton!
     var offButton: UIButton!
     var buttonWindow: UIView!
-    var centerCircle: UIView!
     
-    var onLabelActive: UILabel!
-    var onLabelInactive: UILabel!
-    var offLabelActive: UILabel!
-    var offLabelInactive: UILabel!
+    var onLabel: UILabel!
+    var offLabel: UILabel!
     var centerCircleLabel: UILabel!
+    
+    let whiteColor = UIColor.whiteColor()
+    let darkGreyColor = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
+    
+    var isOff: Bool!
 
     override func drawRect(rect: CGRect) {
-        
+    
         backgroundView = UIView()
         backgroundView.frame = self.bounds
         backgroundView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
@@ -35,7 +37,7 @@ class CustomSwitch: UIView {
         
         buttonWindow = UIView()
         buttonWindow.frame = CGRectMake(0.0, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
-        buttonWindow.backgroundColor = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
+        buttonWindow.backgroundColor = darkGreyColor
         buttonWindow.layer.cornerRadius = 4.0
         self.addSubview(buttonWindow)
         
@@ -45,131 +47,91 @@ class CustomSwitch: UIView {
         onButton.frame = CGRectMake(0.0, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
         onButton.backgroundColor = UIColor.clearColor()
         onButton.enabled = false
-        onButton.addTarget(self, action: "switchOn", forControlEvents: UIControlEvents.TouchUpInside)
+        onButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(onButton)
         
         offButton = UIButton()
         offButton.frame = CGRectMake(self.bounds.size.width / 2, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
         offButton.backgroundColor = UIColor.clearColor()
         offButton.enabled = true
-        offButton.addTarget(self, action: "switchOff", forControlEvents: UIControlEvents.TouchUpInside)
+        offButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(offButton)
 
         // Setup the Labels
         
-        onLabelActive = UILabel()
-        onLabelActive.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
-        onLabelActive.alpha = 1.0
-        onLabelActive.text = "ON"
-        onLabelActive.textAlignment = NSTextAlignment.Center
-        onLabelActive.textColor = UIColor.whiteColor()
-        onLabelActive.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
-        onButton.addSubview(onLabelActive)
+        onLabel = UILabel()
+        onLabel.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
+        onLabel.alpha = 1.0
+        onLabel.text = "ON"
+        onLabel.textAlignment = NSTextAlignment.Center
+        onLabel.textColor = whiteColor
+        onLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
+        onButton.addSubview(onLabel)
         
-        onLabelInactive = UILabel()
-        onLabelInactive.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
-        onLabelInactive.alpha = 0.0
-        onLabelInactive.text = "ON"
-        onLabelInactive.textAlignment = NSTextAlignment.Center
-        onLabelInactive.textColor = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
-        onLabelInactive.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
-        onButton.addSubview(onLabelInactive)
+        offLabel = UILabel()
+        offLabel.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
+        offLabel.alpha = 1.0
+        offLabel.text = "OFF"
+        offLabel.textAlignment = NSTextAlignment.Center
+        offLabel.textColor = darkGreyColor
+        offLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
+        offButton.addSubview(offLabel)
         
-        offLabelActive = UILabel()
-        offLabelActive.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
-        offLabelActive.alpha = 0.0
-        offLabelActive.text = "OFF"
-        offLabelActive.textAlignment = NSTextAlignment.Center
-        offLabelActive.textColor = UIColor.whiteColor()
-        offLabelActive.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
-        offButton.addSubview(offLabelActive)
-        
-        offLabelInactive = UILabel()
-        offLabelInactive.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
-        offLabelInactive.alpha = 1.0
-        offLabelInactive.text = "OFF"
-        offLabelInactive.textAlignment = NSTextAlignment.Center
-        offLabelInactive.textColor = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
-        offLabelInactive.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
-        offButton.addSubview(offLabelInactive)
-     
-        
-        centerCircle = UIView()
-        centerCircle.frame = CGRectMake((self.bounds.size.width / 2) - 12.0, (self.bounds.size.height / 2) - 12.0, 24.0, 24.0)
-        centerCircle.backgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1)
-        centerCircle.layer.cornerRadius = 12.0
-        self.addSubview(centerCircle)
+        // Set up the center Label
         
         centerCircleLabel = UILabel()
-        centerCircleLabel.frame = CGRectMake(0.0, 0.0, 24.0, 24.0)
+        centerCircleLabel.frame = CGRectMake((self.bounds.size.width / 2) - 12.0, (self.bounds.size.height / 2) - 12.0, 24.0, 24.0)
         centerCircleLabel.text = "or"
         centerCircleLabel.textAlignment = NSTextAlignment.Center
         centerCircleLabel.textColor = UIColor(red:0.49, green:0.49, blue:0.49, alpha:1)
         centerCircleLabel.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
-        centerCircle.addSubview(centerCircleLabel)
+        centerCircleLabel.backgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1)
+        centerCircleLabel.layer.cornerRadius = 12.0
+        centerCircleLabel.clipsToBounds = true
+        self.addSubview(centerCircleLabel)
+        
+        isOff = false
         
     }
     
+    func toggleSwitch(sender: UIButton) {
+        onOrOff(!isOff)
+    }
 
-    func switchOn() {
+    func onOrOff(on : Bool){
         
-        UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-            
-            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 14.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-                
-                self.buttonWindow.frame.origin.x -= self.frame.size.width / 2
-
-            }, completion: nil)
-            
-
-            self.onLabelActive.alpha = 1.0
-            self.onLabelInactive.alpha = 0.0
-            self.offLabelActive.alpha = 0.0
-            self.offLabelInactive.alpha = 1.0
-            
-            self.onButton.enabled = false
-            self.offButton.enabled = true
-            
-        }, completion: nil)
+        if(on == isOff){
+            return
+        }
+        isOff = on
         
+        UIView.animateWithDuration(0.4,
+            delay: 0.0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 14.0,
+            options: UIViewAnimationOptions.CurveEaseOut,
+            animations: { () -> Void in
+                self.buttonWindow.frame.origin.x += self.frame.size.width / 2 * (on ? 1 : -1)
+            },
+            completion: nil)
+        
+        animateLabel(self.offLabel, toColor: (on ? whiteColor : darkGreyColor))
+        animateLabel(self.onLabel, toColor: (on ? darkGreyColor : whiteColor))
+        
+        self.onButton.enabled = !self.onButton.enabled
+        self.offButton.enabled = !self.offButton.enabled
+
     }
     
-    func switchOff() {
-        
-        UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-            
-            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 14.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-                
-                self.buttonWindow.frame.origin.x += self.frame.size.width / 2
-                
-                }, completion: nil)
-            
-            self.onLabelActive.alpha = 0.0
-            self.onLabelInactive.alpha = 1.0
-            self.offLabelActive.alpha = 1.0
-            self.offLabelInactive.alpha = 0.0
-            
-            self.onButton.enabled = true
-            self.offButton.enabled = false
-            
-            }, completion: nil)
-        
+    private func animateLabel(label : UILabel!, toColor : UIColor){
+        UIView.transitionWithView(label,
+            duration: 0.4,
+            options: UIViewAnimationOptions.CurveEaseOut |
+                UIViewAnimationOptions.TransitionCrossDissolve |
+                UIViewAnimationOptions.BeginFromCurrentState,
+            animations: { () -> Void in
+                label.textColor = toColor
+            },
+            completion: nil)
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
