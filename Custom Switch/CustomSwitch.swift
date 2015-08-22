@@ -10,19 +10,21 @@ import UIKit
 
 class CustomSwitch: UIView {
     
-    var backgroundView: UIView!
+    private var backgroundView: UIView!
 
-    var onButton: UIButton!
-    var offButton: UIButton!
-    var buttonWindow: UIView!
+    private var onButton: UIButton!
+    private var offButton: UIButton!
+    private var buttonWindow: UIView!
     
-    var onLabel: UILabel!
-    var offLabel: UILabel!
-    var centerCircleLabel: UILabel!
+    private var onLabel: UILabel!
+    private var offLabel: UILabel!
+    private var centerCircleLabel: UILabel!
     
-    let whiteColor = UIColor.whiteColor()
-    let darkGreyColor = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
-    
+    private struct SwitchColor {
+      static let on = UIColor.whiteColor()
+      static let off = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
+    }
+  
     var isOff: Bool!
 
     override func drawRect(rect: CGRect) {
@@ -37,7 +39,7 @@ class CustomSwitch: UIView {
         
         buttonWindow = UIView()
         buttonWindow.frame = CGRectMake(0.0, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
-        buttonWindow.backgroundColor = darkGreyColor
+        buttonWindow.backgroundColor = SwitchColor.off
         buttonWindow.layer.cornerRadius = 4.0
         self.addSubview(buttonWindow)
         
@@ -64,7 +66,7 @@ class CustomSwitch: UIView {
         onLabel.alpha = 1.0
         onLabel.text = "ON"
         onLabel.textAlignment = NSTextAlignment.Center
-        onLabel.textColor = whiteColor
+        onLabel.textColor = SwitchColor.on
         onLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
         onButton.addSubview(onLabel)
         
@@ -73,7 +75,7 @@ class CustomSwitch: UIView {
         offLabel.alpha = 1.0
         offLabel.text = "OFF"
         offLabel.textAlignment = NSTextAlignment.Center
-        offLabel.textColor = darkGreyColor
+        offLabel.textColor = SwitchColor.off
         offLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
         offButton.addSubview(offLabel)
         
@@ -98,7 +100,7 @@ class CustomSwitch: UIView {
         onOrOff(!isOff)
     }
 
-    func onOrOff(on : Bool){
+    private func onOrOff(on : Bool){
         
         if(on == isOff){
             return
@@ -115,8 +117,8 @@ class CustomSwitch: UIView {
             },
             completion: nil)
         
-        animateLabel(self.offLabel, toColor: (on ? whiteColor : darkGreyColor))
-        animateLabel(self.onLabel, toColor: (on ? darkGreyColor : whiteColor))
+        animateLabel(self.offLabel, toColor: (on ? SwitchColor.on : SwitchColor.off))
+        animateLabel(self.onLabel, toColor: (on ? SwitchColor.off : SwitchColor.on))
         
         self.onButton.enabled = !self.onButton.enabled
         self.offButton.enabled = !self.offButton.enabled
