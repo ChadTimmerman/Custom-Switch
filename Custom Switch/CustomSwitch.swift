@@ -102,9 +102,8 @@ class CustomSwitch: UIView {
 
     private func onOrOff(on : Bool){
         
-        if(on == isOff){
-            return
-        }
+        guard on != isOff else { return }
+
         isOff = on
         
         UIView.animateWithDuration(0.4,
@@ -128,9 +127,7 @@ class CustomSwitch: UIView {
     private func animateLabel(label : UILabel!, toColor : UIColor){
         UIView.transitionWithView(label,
             duration: 0.4,
-            options: UIViewAnimationOptions.CurveEaseOut |
-                UIViewAnimationOptions.TransitionCrossDissolve |
-                UIViewAnimationOptions.BeginFromCurrentState,
+            options: [.CurveEaseOut, .TransitionCrossDissolve, .BeginFromCurrentState],
             animations: { () -> Void in
                 label.textColor = toColor
             },
