@@ -29,31 +29,27 @@ class CustomSwitch: UIView {
 
     override func drawRect(rect: CGRect) {
     
-        backgroundView = UIView()
-        backgroundView.frame = self.bounds
+        backgroundView = UIView(frame: self.bounds)
         backgroundView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         backgroundView.layer.cornerRadius = 4.0
         self.addSubview(backgroundView)
         
         // Setup the Sliding Window
         
-        buttonWindow = UIView()
-        buttonWindow.frame = CGRectMake(0.0, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
+        buttonWindow = UIView(frame: CGRect(x: 0.0, y: 0.0, width: CGRectGetWidth(self.bounds) / 2, height: CGRectGetHeight(self.bounds)))
         buttonWindow.backgroundColor = SwitchColor.off
         buttonWindow.layer.cornerRadius = 4.0
         self.addSubview(buttonWindow)
         
         // Setup the Buttons
         
-        onButton = UIButton()
-        onButton.frame = CGRectMake(0.0, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
+        onButton = UIButton(frame: CGRect(x: 0.0, y: 0.0, width: CGRectGetWidth(self.bounds) / 2, height: CGRectGetHeight(self.bounds)))
         onButton.backgroundColor = UIColor.clearColor()
         onButton.enabled = false
         onButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(onButton)
         
-        offButton = UIButton()
-        offButton.frame = CGRectMake(self.bounds.size.width / 2, 0.0, self.bounds.size.width / 2, self.bounds.size.height)
+        offButton = UIButton(frame: CGRect(x: CGRectGetWidth(self.bounds) / 2, y: 0.0, width: CGRectGetWidth(self.bounds) / 2, height: CGRectGetHeight(self.bounds)))
         offButton.backgroundColor = UIColor.clearColor()
         offButton.enabled = true
         offButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -61,8 +57,7 @@ class CustomSwitch: UIView {
 
         // Setup the Labels
         
-        onLabel = UILabel()
-        onLabel.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
+        onLabel = UILabel(frame: CGRect(x: 0.0, y: (CGRectGetHeight(self.bounds) / 2) - 25.0, width: CGRectGetWidth(self.bounds) / 2, height: 50.0))
         onLabel.alpha = 1.0
         onLabel.text = "ON"
         onLabel.textAlignment = NSTextAlignment.Center
@@ -70,8 +65,7 @@ class CustomSwitch: UIView {
         onLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
         onButton.addSubview(onLabel)
         
-        offLabel = UILabel()
-        offLabel.frame = CGRectMake(0.0, (self.bounds.size.height / 2) - 25.0, self.bounds.size.width / 2, 50.0)
+        offLabel = UILabel(frame: CGRect(x: 0.0, y: (CGRectGetHeight(self.bounds) / 2) - 25.0, width: CGRectGetWidth(self.bounds) / 2, height: 50.0))
         offLabel.alpha = 1.0
         offLabel.text = "OFF"
         offLabel.textAlignment = NSTextAlignment.Center
@@ -81,8 +75,7 @@ class CustomSwitch: UIView {
         
         // Set up the center Label
         
-        centerCircleLabel = UILabel()
-        centerCircleLabel.frame = CGRectMake((self.bounds.size.width / 2) - 12.0, (self.bounds.size.height / 2) - 12.0, 24.0, 24.0)
+        centerCircleLabel = UILabel(frame: CGRect(x: (CGRectGetWidth(self.bounds) / 2) - 12.0, y: (CGRectGetHeight(self.bounds) / 2) - 12.0, width: 24.0, height: 24.0))
         centerCircleLabel.text = "or"
         centerCircleLabel.textAlignment = NSTextAlignment.Center
         centerCircleLabel.textColor = UIColor(red:0.49, green:0.49, blue:0.49, alpha:1)
@@ -109,9 +102,7 @@ class CustomSwitch: UIView {
             usingSpringWithDamping: 0.8,
             initialSpringVelocity: 14.0,
             options: UIViewAnimationOptions.CurveEaseOut,
-            animations: { () -> Void in
-                self.buttonWindow.frame.origin.x += self.frame.size.width / 2 * (on ? 1 : -1)
-            },
+            animations: { self.buttonWindow.frame.origin.x += CGRectGetWidth(self.bounds) / 2 * (on ? 1 : -1)},
             completion: nil)
         
         animateLabel(self.offLabel, toColor: (on ? SwitchColor.on : SwitchColor.off))
