@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol CustomSwitchDelegate: class {
+  func didSelectSwitchButton(sender: CustomSwitch)
+}
+
 @IBDesignable
 class CustomSwitch: UIView {
-    
+  
+    weak var delegate: CustomSwitchDelegate?
+
     private var backgroundView: UIView!
 
     private var onButton: UIButton!
@@ -111,7 +117,8 @@ class CustomSwitch: UIView {
         
         self.onButton.enabled = !self.onButton.enabled
         self.offButton.enabled = !self.offButton.enabled
-
+      
+        delegate?.didSelectSwitchButton(self)
     }
     
     private func animateLabel(label : UILabel!, toColor : UIColor){
