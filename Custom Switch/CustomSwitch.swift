@@ -12,10 +12,16 @@ protocol CustomSwitchDelegate: class {
   func didSelectSwitchButton(sender: CustomSwitch)
 }
 
+typealias SwitchButtonsTitles = (onButton: String, offButton: String)
+protocol CustomSwitchDataSource: class {
+  func titlesForSwitchButtons(sender: CustomSwitch) -> SwitchButtonsTitles
+}
+
 @IBDesignable
 class CustomSwitch: UIView {
   
     weak var delegate: CustomSwitchDelegate?
+    weak var dataSource: CustomSwitchDataSource?
 
     private var backgroundView: UIView!
 
@@ -66,7 +72,7 @@ class CustomSwitch: UIView {
         
         onLabel = UILabel(frame: CGRect(x: 0.0, y: (CGRectGetHeight(self.bounds) / 2) - 25.0, width: CGRectGetWidth(self.bounds) / 2, height: 50.0))
         onLabel.alpha = 1.0
-        onLabel.text = "ON"
+        onLabel.text = dataSource?.titlesForSwitchButtons(self).onButton ?? "ON"
         onLabel.textAlignment = NSTextAlignment.Center
         onLabel.textColor = SwitchColor.on
         onLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
@@ -74,7 +80,7 @@ class CustomSwitch: UIView {
         
         offLabel = UILabel(frame: CGRect(x: 0.0, y: (CGRectGetHeight(self.bounds) / 2) - 25.0, width: CGRectGetWidth(self.bounds) / 2, height: 50.0))
         offLabel.alpha = 1.0
-        offLabel.text = "OFF"
+        offLabel.text = dataSource?.titlesForSwitchButtons(self).offButton ?? "OFF"
         offLabel.textAlignment = NSTextAlignment.Center
         offLabel.textColor = SwitchColor.off
         offLabel.font = UIFont(name: "AvenirNext-Demibold", size: 15.0)
