@@ -25,7 +25,7 @@ class CustomSwitch: UIView {
       static let off = UIColor(red:0.22, green:0.22, blue:0.22, alpha:1)
     }
   
-    var isOff: Bool!
+    var isOff = false
 
     override func drawRect(rect: CGRect) {
     
@@ -91,9 +91,7 @@ class CustomSwitch: UIView {
         centerCircleLabel.layer.cornerRadius = 12.0
         centerCircleLabel.clipsToBounds = true
         self.addSubview(centerCircleLabel)
-        
-        isOff = false
-        
+  
     }
     
     func toggleSwitch(sender: UIButton) {
