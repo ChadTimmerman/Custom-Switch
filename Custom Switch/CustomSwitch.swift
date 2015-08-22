@@ -8,6 +8,7 @@
 
 import UIKit
 
+@IBDesignable
 class CustomSwitch: UIView {
     
     private var backgroundView: UIView!
